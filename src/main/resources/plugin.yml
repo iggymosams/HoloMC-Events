@@ -1,0 +1,5 @@
+name: HoloMCEvents
+version: '${project.version}'
+main: me.iggymosams.holomcevents.HoloMCEvents
+api-version: 1.18
+authors: [ iggymosams ]

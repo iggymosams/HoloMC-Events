@@ -80,7 +80,7 @@ public class BlockParty implements Listener {
 
         plusCorner.setY(63);
         minusCorner.setY(63);
-//        setupTeam();
+        setupTeam();
         setupColors();
         generatePlatform(plusCorner, minusCorner);
         allowJoining = true;
@@ -103,12 +103,13 @@ public class BlockParty implements Listener {
         colors.add(Material.WHITE_CONCRETE);
     }
 
-    //TODO: Fix :)
     private void setupTeam() {
         Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
-        if(!scoreboard.getTeams().contains("BlockParty")) {
+        if(scoreboard.getTeam("BlockParty") == null) {
             team = scoreboard.registerNewTeam("BlockParty");
             team.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.NEVER);
+        } else {
+            team = scoreboard.getTeam("BlockParty");
         }
     }
 
@@ -210,7 +211,7 @@ public class BlockParty implements Listener {
             p.setGameMode(GameMode.SURVIVAL);
             p.setHealth(20);
             p.setFoodLevel(20);
-//            team.addEntry(p.getName());
+            team.addEntry(p.getName());
         }
         Bukkit.getScheduler().runTaskLater(plugin, this::game, 3*20);
     }

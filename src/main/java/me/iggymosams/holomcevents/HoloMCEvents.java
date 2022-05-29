@@ -1,5 +1,7 @@
 package me.iggymosams.holomcevents;
 
+import me.iggymosams.holomcevents.Games.BlockParty;
+import me.iggymosams.holomcevents.Games.TNTTag;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -14,9 +16,15 @@ public final class HoloMCEvents extends JavaPlugin {
         plugin = this;
         getServer().getMessenger().registerOutgoingPluginChannel( this, "BungeeCord" ); 
         getServer().getMessenger().registerIncomingPluginChannel( this, "my:events", new PluginMessage() ); 
-        
+
+        RegisterGames();
         RegisterCommands();
         RegisterEvents();
+    }
+
+    private void RegisterGames() {
+        eventManager.blockParty = new BlockParty();
+        eventManager.tntTag = new TNTTag();
     }
 
     private void RegisterCommands() {
@@ -28,6 +36,7 @@ public final class HoloMCEvents extends JavaPlugin {
         PluginManager pm = getServer().getPluginManager();
         pm.registerEvents(eventManager, this);
         pm.registerEvents(eventManager.blockParty, this);
+        pm.registerEvents(eventManager.tntTag, this);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package me.iggymosams.holomcevents;
 
 import net.kyori.adventure.text.TextComponent;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -34,5 +35,9 @@ public class api {
         item.setItemMeta(meta);
 
         return item;
+    }
+
+    public static void eventBroadcast(String msg) {
+        Bukkit.broadcastMessage(api.color("Events -> " + msg));
     }
 }

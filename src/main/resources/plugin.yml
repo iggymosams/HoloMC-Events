@@ -4,5 +4,6 @@ main: me.iggymosams.holomcevents.HoloMCEvents
 api-version: 1.18
 authors: [ iggymosams ]
 depend:
-  - PlaceholderAPI
   - Multiverse-Core
+commands:
+  start:

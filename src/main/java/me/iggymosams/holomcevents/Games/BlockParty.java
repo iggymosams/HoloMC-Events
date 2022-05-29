@@ -84,7 +84,7 @@ public class BlockParty implements Listener {
         setupColors();
         generatePlatform(plusCorner, minusCorner);
         allowJoining = true;
-        Join(host);
+        join(host);
     }
 
     private void setupColors() {
@@ -236,7 +236,7 @@ public class BlockParty implements Listener {
         allowJoining = true;
     }
 
-    public void Join(Player p) {
+    public void join(Player p) {
         System.out.println(p);
         if(allowJoining) {
             if (!players.contains(p)) {
@@ -278,6 +278,7 @@ public class BlockParty implements Listener {
         if(!(e.getEntity() instanceof Player)) return;
         if(!(e.getDamager() instanceof Player)) return;
         if(e.getEntity().getWorld() != world) return;
+        System.out.println("Test");
         if(players.contains(e.getEntity())) e.setCancelled(true);
     }
 

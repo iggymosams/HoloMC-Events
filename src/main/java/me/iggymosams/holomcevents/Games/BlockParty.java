@@ -1,16 +1,10 @@
 package me.iggymosams.holomcevents.Games;
 
-import com.onarandombox.MultiverseCore.MultiverseCore;
-import com.onarandombox.MultiverseCore.api.MVWorldManager;
-import me.iggymosams.holomcevents.EventManager;
 import me.iggymosams.holomcevents.HoloMCEvents;
 import me.iggymosams.holomcevents.PluginMessage;
 import me.iggymosams.holomcevents.api;
 import org.bukkit.*;
 import org.bukkit.block.Block;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -24,7 +18,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,16 +26,12 @@ import java.util.Random;
 public class BlockParty implements Listener {
 
     HoloMCEvents plugin = api.getPlugin();
-//    EventManager eventManager = plugin.getEventManager();
 
     public List<Player> players = new ArrayList<>();
 
     Location plusCorner;
     Location minusCorner;
     Location spawn;
-
-    MultiverseCore core = (MultiverseCore) Bukkit.getServer().getPluginManager().getPlugin("Multiverse-Core");
-    MVWorldManager worldManager = core.getMVWorldManager();
 
     Player host;
 

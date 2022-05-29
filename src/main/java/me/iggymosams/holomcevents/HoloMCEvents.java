@@ -23,11 +23,13 @@ public final class HoloMCEvents extends JavaPlugin {
     }
 
     private void RegisterGames() {
+        getLogger().info("Registering Games");
         eventManager.blockParty = new BlockParty();
         eventManager.tntTag = new TNTTag();
     }
 
     private void RegisterCommands() {
+        getLogger().info("Registering Commands");
         getCommand("start").setExecutor(eventManager);
     }
 

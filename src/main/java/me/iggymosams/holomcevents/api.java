@@ -4,6 +4,7 @@ import net.kyori.adventure.text.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -39,5 +40,11 @@ public class api {
 
     public static void eventBroadcast(String msg) {
         Bukkit.broadcastMessage(api.color("Events -> " + msg));
+    }
+
+    public static void returnPlayers() {
+        for(Player p : Bukkit.getOnlinePlayers()){
+            PluginMessage.connect(p, "lobby");
+        }
     }
 }

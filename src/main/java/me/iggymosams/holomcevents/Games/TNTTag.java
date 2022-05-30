@@ -170,16 +170,10 @@ public class TNTTag implements Listener {
     private void endGame() {
         Bukkit.getScheduler().cancelTask(taskID);
         api.eventBroadcast(players.get(0).getName() + " has won the event!");
-        Bukkit.getScheduler().runTaskLater(plugin, this::returnPlayers, 3*20);
-    }
-
-    public void returnPlayers() {
-        for(Player p : Bukkit.getOnlinePlayers()){
-            PluginMessage.connect(p, "lobby");
-        }
         players.clear();
         taggers.clear();
         allowJoining = true;
+        Bukkit.getScheduler().runTaskLater(plugin, api::returnPlayers, 3*20);
     }
 
     private void playerTagged(Player player, Player tagger) {

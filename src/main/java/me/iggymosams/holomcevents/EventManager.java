@@ -1,6 +1,7 @@
 package me.iggymosams.holomcevents;
 import me.iggymosams.holomcevents.Games.BlockParty;
 import me.iggymosams.holomcevents.Games.TNTTag;
+import me.iggymosams.holomcevents.Games.UHC;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -21,6 +22,7 @@ public class EventManager implements Listener, CommandExecutor {
 
     public BlockParty blockParty;
     public TNTTag tntTag;
+    public UHC uhc;
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
@@ -32,6 +34,9 @@ public class EventManager implements Listener, CommandExecutor {
             case "TNT Tag":
                 tntTag.start();
                 return true;
+            case "UHC":
+                uhc.start();
+                return true;
         }
 
             return false;
@@ -41,6 +46,7 @@ public class EventManager implements Listener, CommandExecutor {
         etgui = Bukkit.createInventory(null, 9, api.color("Event Type"));
         etgui.setItem(1, api.createGuiItem(Material.PINK_CONCRETE, "&aBlock Party Event", "&cComing Soon"));
         etgui.setItem(2, api.createGuiItem(Material.TNT, "&aTNT Tag Event", "&cComing Soon"));
+        etgui.setItem(3, api.createGuiItem(Material.GOLDEN_APPLE, "&aUHC Event", "&cComing Soon"));
         host.openInventory(etgui);
     }
 
@@ -52,6 +58,9 @@ public class EventManager implements Listener, CommandExecutor {
             case "TNT Tag":
                 tntTag.join(p);
                 break;
+            case "UHC":
+                uhc.join(p);
+                break;
         }
     }
 
@@ -61,17 +70,20 @@ public class EventManager implements Listener, CommandExecutor {
         Player p = (Player) e.getWhoClicked();
         if(!e.getView().getTitle().equals("Event Type")) return;
         e.setCancelled(true);
-
+        host = p;
         switch (e.getSlot()) {
             case 1:
-                host = p;
                 EventType = "Block Party";
                 blockParty.setUp(host);
                 break;
             case 2:
-                host = p;
                 EventType = "TNT Tag";
                 tntTag.setUp(host);
+                break;
+            case 3:
+                EventType = "UHC";
+                p.closeInventory();
+                uhc.setUp(host);
                 break;
         }
         PluginMessage.sendEventBroadcast(p, "_event_broadcast", api.color("Events -> %host% is hosting a %event% event. Do /event to join").replace("%host%", host.getName()).replace("%event%", EventType));

@@ -2,6 +2,7 @@ package me.iggymosams.holomcevents;
 
 import me.iggymosams.holomcevents.Games.BlockParty;
 import me.iggymosams.holomcevents.Games.TNTTag;
+import me.iggymosams.holomcevents.Games.UHC;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -26,6 +27,7 @@ public final class HoloMCEvents extends JavaPlugin {
         getLogger().info("Registering Games");
         eventManager.blockParty = new BlockParty();
         eventManager.tntTag = new TNTTag();
+        eventManager.uhc = new UHC();
     }
 
     private void RegisterCommands() {
@@ -39,6 +41,7 @@ public final class HoloMCEvents extends JavaPlugin {
         pm.registerEvents(eventManager, this);
         pm.registerEvents(eventManager.blockParty, this);
         pm.registerEvents(eventManager.tntTag, this);
+        pm.registerEvents(eventManager.uhc, this);
     }
 
     @Override

@@ -28,6 +28,7 @@ public final class HoloMCEvents extends JavaPlugin {
 
     private void LoadMessages() {
         messagesConfig = new MessagesConfig();
+        messagesConfig.setup();
         messagesConfig.loadDefaults();
         messagesConfig.get().options().copyDefaults(true);
         messagesConfig.save();

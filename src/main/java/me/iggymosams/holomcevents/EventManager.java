@@ -92,6 +92,6 @@ public class EventManager implements Listener, CommandExecutor {
                 uhc.setUp(host);
                 break;
         }
-        PluginMessage.sendEventBroadcast(p, "_event_broadcast", api.getPrefix() + " " + api.getMessage("EventHost").replace("%host%", host.getName()).replace("%event%", EventType));
+        PluginMessage.sendEventBroadcast(p, "_event_broadcast", api.getPrefix() + " " + api.getMessage("EventHost").replace("%host%", host.getName()).replace("%eventtype%", EventType));
     }
 }

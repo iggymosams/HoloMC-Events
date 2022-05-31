@@ -3,6 +3,7 @@ package me.iggymosams.holomcevents;
 import me.iggymosams.holomcevents.Games.BlockParty;
 import me.iggymosams.holomcevents.Games.TNTTag;
 import me.iggymosams.holomcevents.Games.UHC;
+import me.iggymosams.holomcevents.Util.MessagesConfig;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -11,6 +12,7 @@ public final class HoloMCEvents extends JavaPlugin {
     private static HoloMCEvents plugin;
 
     EventManager eventManager = new EventManager();
+    MessagesConfig messagesConfig;
 
     @Override
     public void onEnable() {
@@ -21,6 +23,14 @@ public final class HoloMCEvents extends JavaPlugin {
         RegisterGames();
         RegisterCommands();
         RegisterEvents();
+        LoadMessages();
+    }
+
+    private void LoadMessages() {
+        messagesConfig = new MessagesConfig();
+        messagesConfig.loadDefaults();
+        messagesConfig.get().options().copyDefaults(true);
+        messagesConfig.save();
     }
 
     private void RegisterGames() {

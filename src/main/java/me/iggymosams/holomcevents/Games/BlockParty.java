@@ -214,7 +214,7 @@ public class BlockParty implements Listener {
     private void endGame() {
         Bukkit.getScheduler().cancelTask(taskID);
         generatePlatform(plusCorner, minusCorner);
-        api.eventBroadcast(players.get(0).getName() + " has won the event!");
+        api.eventBroadcast(api.getMessage("EventWin").replace("%player%", players.get(0).getName()));
         players.clear();
         allowJoining = true;
         Bukkit.getScheduler().runTaskLater(plugin, api::returnPlayers, 3*20);

@@ -26,20 +26,26 @@ public class EventManager implements Listener, CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        switch (EventType) {
-            case "Block Party":
-                System.out.println("Block Party Started");
-                blockParty.start();
-                return true;
-            case "TNT Tag":
-                tntTag.start();
-                return true;
-            case "UHC":
-                uhc.start();
-                return true;
+        if(sender instanceof Player) {
+            Player p = (Player) sender;
+            if(host == p) {
+                switch (EventType) {
+                    case "Block Party":
+                        blockParty.start();
+                        return true;
+                    case "TNT Tag":
+                        tntTag.start();
+                        return true;
+                    case "UHC":
+                        uhc.start();
+                        return true;
+                }
+                api.sendEventMessage(p, "EventStart");
+            } else{
+                api.noPermission(p);
+            }
         }
-
-            return false;
+        return false;
     }
 
     public void EventSetup(Player host){
@@ -86,6 +92,6 @@ public class EventManager implements Listener, CommandExecutor {
                 uhc.setUp(host);
                 break;
         }
-        PluginMessage.sendEventBroadcast(p, "_event_broadcast", api.color("Events -> %host% is hosting a %event% event. Do /event to join").replace("%host%", host.getName()).replace("%event%", EventType));
+        PluginMessage.sendEventBroadcast(p, "_event_broadcast", api.getPrefix() + " " + api.getMessage("EventHost").replace("%host%", host.getName()).replace("%event%", EventType));
     }
 }

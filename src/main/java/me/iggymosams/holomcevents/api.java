@@ -39,12 +39,29 @@ public class api {
     }
 
     public static void eventBroadcast(String msg) {
-        Bukkit.broadcastMessage(api.color("Events -> " + msg));
+        Bukkit.broadcastMessage(api.color(getPrefix() + msg));
     }
 
     public static void returnPlayers() {
         for(Player p : Bukkit.getOnlinePlayers()){
             PluginMessage.connect(p, "lobby");
         }
+    }
+
+    public static String getMessage(String path) {
+        HoloMCEvents plugin = api.getPlugin();
+        return api.color(plugin.messagesConfig.get().getString(path));
+    }
+
+    public static void noPermission(Player p){
+        p.sendMessage(api.getMessage("NoPermission"));
+    }
+
+    public static String getPrefix() {
+        return api.getMessage("EventPrefix");
+    }
+
+    public static void sendEventMessage(Player p, String path){
+        p.sendMessage(api.getPrefix() + " " + api.getMessage(path));
     }
 }

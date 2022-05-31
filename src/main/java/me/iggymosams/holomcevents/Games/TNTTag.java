@@ -144,6 +144,11 @@ public class TNTTag implements Listener {
 
     //Main Game Loop
     public void doTNTTag() {
+        if(players.size() <= 6) {
+            for(Player p : players) {
+                p.teleport(spawn);
+            }
+        }
         taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
             int time = 0;
             @Override

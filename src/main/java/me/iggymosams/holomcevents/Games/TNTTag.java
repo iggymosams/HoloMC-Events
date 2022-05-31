@@ -109,13 +109,25 @@ public class TNTTag implements Listener {
         Bukkit.getScheduler().runTaskLater(plugin, this::pickTaggers, 2*20);
     }
 
-    //TODO: Make tagger team size bigger by player count
     private void pickTaggers() {
         taggers.clear();
         Random random = new Random();
-        int index = random.nextInt(players.size());
-        taggers.add(players.get(index));
-        taggerTeam.addEntry(players.get(index).getName());
+        int taggersAmount = 1;
+        if(players.size() >= 11) {
+            taggersAmount = 3;
+        } else if(players.size() < 11 && players.size() >= 5) {
+            taggersAmount = 2;
+        }
+        for (int i = 0; i < taggersAmount; i++) {
+            int index = random.nextInt(players.size());
+            if(taggers.contains(players.get(index))) {
+                i--;
+                continue;
+            }
+            taggers.add(players.get(index));
+            taggerTeam.addEntry(players.get(index).getName());
+        }
+
 
         for (Player p : taggers) {
             setTaggerInv(p);

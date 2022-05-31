@@ -44,6 +44,7 @@ public class api {
 
     public static void returnPlayers() {
         for(Player p : Bukkit.getOnlinePlayers()){
+            p.getInventory().clear();
             PluginMessage.connect(p, "lobby");
         }
     }

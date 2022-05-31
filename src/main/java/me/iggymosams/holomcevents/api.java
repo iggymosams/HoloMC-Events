@@ -39,7 +39,7 @@ public class api {
     }
 
     public static void eventBroadcast(String msg) {
-        Bukkit.broadcastMessage(api.color(getPrefix() + msg));
+        Bukkit.broadcastMessage(api.color(getPrefix() + " " + msg));
     }
 
     public static void returnPlayers() {

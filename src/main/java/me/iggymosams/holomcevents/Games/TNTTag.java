@@ -136,7 +136,7 @@ public class TNTTag implements Listener {
     }
 
     private void setTaggerInv(Player p) {
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 9; i++) {
             p.getInventory().setItem(i, new ItemStack(Material.TNT));
         }
         p.getInventory().setHelmet(new ItemStack(Material.TNT));

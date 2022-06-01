@@ -214,6 +214,7 @@ public class TNTTag implements Listener {
         if(!(e.getDamager() instanceof Player)) return;
         Player p = (Player) e.getEntity();
         if(p.getWorld() != world) return;
+        if(allowJoining) e.setCancelled(true);
         System.out.println("TNT");
         if(players.contains(p)) {
 //            p.setHealth(20);

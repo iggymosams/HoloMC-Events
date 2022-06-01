@@ -1,5 +1,6 @@
 package me.iggymosams.holomcevents;
 import me.iggymosams.holomcevents.Games.BlockParty;
+import me.iggymosams.holomcevents.Games.FloorIsLava;
 import me.iggymosams.holomcevents.Games.TNTTag;
 import me.iggymosams.holomcevents.Games.UHC;
 import org.bukkit.Bukkit;
@@ -23,6 +24,7 @@ public class EventManager implements Listener, CommandExecutor {
     public BlockParty blockParty;
     public TNTTag tntTag;
     public UHC uhc;
+    public FloorIsLava floorIsLava;
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
@@ -39,6 +41,9 @@ public class EventManager implements Listener, CommandExecutor {
                     case "UHC":
                         uhc.start();
                         return true;
+                    case "Floor Is Lava":
+                        floorIsLava.start();
+                        return true;
                 }
                 api.sendEventMessage(p, "EventStart");
             } else{
@@ -53,6 +58,7 @@ public class EventManager implements Listener, CommandExecutor {
         etgui.setItem(1, api.createGuiItem(Material.PINK_CONCRETE, "&aBlock Party Event", "&cComing Soon"));
         etgui.setItem(2, api.createGuiItem(Material.TNT, "&aTNT Tag Event", "&cComing Soon"));
         etgui.setItem(3, api.createGuiItem(Material.GOLDEN_APPLE, "&aUHC Event", "&cComing Soon"));
+        etgui.setItem(4, api.createGuiItem(Material.LAVA_BUCKET, "&aFloor Is Lava Event", "&cComing Soon"));
         host.openInventory(etgui);
     }
 
@@ -66,6 +72,9 @@ public class EventManager implements Listener, CommandExecutor {
                 break;
             case "UHC":
                 uhc.join(p);
+                break;
+            case "Floor Is Lava":
+                floorIsLava.join(p);
                 break;
         }
     }
@@ -90,6 +99,11 @@ public class EventManager implements Listener, CommandExecutor {
                 EventType = "UHC";
                 p.closeInventory();
                 uhc.setUp(host);
+                break;
+            case 4:
+                EventType = "Floor Is Lava";
+                p.closeInventory();
+                floorIsLava.setUp(host);
                 break;
         }
         PluginMessage.sendEventBroadcast(p, "_event_broadcast", api.getPrefix() + " " + api.getMessage("EventHost").replace("%host%", host.getName()).replace("%eventtype%", EventType));

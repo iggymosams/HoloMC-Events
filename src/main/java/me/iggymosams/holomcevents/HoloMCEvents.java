@@ -1,6 +1,7 @@
 package me.iggymosams.holomcevents;
 
 import me.iggymosams.holomcevents.Games.BlockParty;
+import me.iggymosams.holomcevents.Games.FloorIsLava;
 import me.iggymosams.holomcevents.Games.TNTTag;
 import me.iggymosams.holomcevents.Games.UHC;
 import me.iggymosams.holomcevents.Util.MessagesConfig;
@@ -39,6 +40,7 @@ public final class HoloMCEvents extends JavaPlugin {
         eventManager.blockParty = new BlockParty();
         eventManager.tntTag = new TNTTag();
         eventManager.uhc = new UHC();
+        eventManager.floorIsLava = new FloorIsLava();
     }
 
     private void RegisterCommands() {

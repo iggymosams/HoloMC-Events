@@ -217,6 +217,9 @@ public class TNTTag implements Listener {
         System.out.println("TNT");
         if(players.contains(p)) {
 //            p.setHealth(20);
+            if(taggers.contains(p)) {
+                return;
+            }
             if(taggers.contains(e.getDamager())) {
                    playerTagged(p, (Player) e.getDamager());
             }

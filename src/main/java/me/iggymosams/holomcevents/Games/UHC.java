@@ -28,12 +28,12 @@ public class UHC implements Listener {
     World world;
     WorldBorder worldBorder;
 
-    int graceTime = 60;
+    int graceTime = 180;
     boolean grace;
 
     int worldTime = 300;
     int worldSize = 2500;
-    int shrinkSize = 100;
+    int shrinkSize = 200;
     int shrinkTime = 300;
 
     MultiverseCore core = (MultiverseCore) Bukkit.getServer().getPluginManager().getPlugin("Multiverse-Core");
@@ -67,6 +67,8 @@ public class UHC implements Listener {
 
         worldBorder = world.getWorldBorder();
         worldBorder.setCenter(world.getSpawnLocation());
+        worldBorder.setDamageAmount(0.1);
+        worldBorder.setDamageBuffer(3);
         worldBorder.setSize(5);
 
         grace = true;

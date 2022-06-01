@@ -247,8 +247,11 @@ public class BlockParty implements Listener {
     public void onMove(PlayerMoveEvent e) {
         Player p = e.getPlayer();
         if(p.getWorld() != world) return;
-
         if(p.getLocation().getY() <= 54) {
+            if(allowJoining){
+                p.teleport(spawn);
+                return;
+            }
             if(players.contains(p)) {
                 playerDeath(p);
             } else {

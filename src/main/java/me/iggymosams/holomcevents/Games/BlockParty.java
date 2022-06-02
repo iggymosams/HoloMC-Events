@@ -1,7 +1,6 @@
 package me.iggymosams.holomcevents.Games;
 
 import me.iggymosams.holomcevents.HoloMCEvents;
-import me.iggymosams.holomcevents.PluginMessage;
 import me.iggymosams.holomcevents.api;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -39,7 +38,7 @@ public class BlockParty implements Listener {
     World world = Bukkit.getWorld(worldName);
 
     int mapSize = 25;
-    
+
     Team team;
 
     List<Material> colors = new ArrayList<>();
@@ -62,10 +61,10 @@ public class BlockParty implements Listener {
 
         this.host = host;
 
-        spawn = new Location(world, 0, 64,0);
+        spawn = new Location(world, 0, 64, 0);
 
-        minusCorner = spawn.clone().subtract(mapSize/2D,0,mapSize/2D);
-        plusCorner = spawn.clone().add(mapSize/2D,0,mapSize/2D);
+        minusCorner = spawn.clone().subtract(mapSize / 2D, 0, mapSize / 2D);
+        plusCorner = spawn.clone().add(mapSize / 2D, 0, mapSize / 2D);
 
         plusCorner.setY(63);
         minusCorner.setY(63);
@@ -94,7 +93,7 @@ public class BlockParty implements Listener {
 
     private void setupTeam() {
         Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
-        if(scoreboard.getTeam("BlockParty") == null) {
+        if (scoreboard.getTeam("BlockParty") == null) {
             team = scoreboard.registerNewTeam("BlockParty");
             team.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.NEVER);
         } else {
@@ -102,7 +101,7 @@ public class BlockParty implements Listener {
         }
     }
 
-    //Main Game Loop
+    // Main Game Loop
     private void game() {
         taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
             public Material chosen = Material.WHITE_CONCRETE;
@@ -135,7 +134,7 @@ public class BlockParty implements Listener {
         }, 0L, 20L);
     }
 
-    //Generates white starting platform
+    // Generates white starting platform
     private void generatePlatform(Location plusCorner, Location minusCorner) {
         for (int x = minusCorner.getBlockX(); x <= plusCorner.getBlockX(); x++) {
             for (int y = minusCorner.getBlockY(); y <= plusCorner.getBlockY(); y++) {
@@ -147,7 +146,7 @@ public class BlockParty implements Listener {
         }
     }
 
-    //Generates Random Pattern
+    // Generates Random Pattern
     public Material generatePattern(Location plusCorner, Location minusCorner) {
         if (floorCount % modifier == 0) {
             if (level <= 2) {
@@ -178,7 +177,7 @@ public class BlockParty implements Listener {
         return chosen;
     }
 
-    //Removes the platform except chosen color
+    // Removes the platform except chosen color
     public void removePlatform(Material chosen, Location plusCorner, Location minusCorner) {
         for (int x = minusCorner.getBlockX(); x <= plusCorner.getBlockX(); x++) {
             for (int y = minusCorner.getBlockY(); y <= plusCorner.getBlockY(); y++) {
@@ -195,14 +194,14 @@ public class BlockParty implements Listener {
 
     public void start() {
         allowJoining = false;
-        for(Player p : players) {
+        for (Player p : players) {
             p.teleport(new Location(world, 0, 64, 0));
             p.setGameMode(GameMode.SURVIVAL);
             p.setHealth(20);
             p.setFoodLevel(20);
             team.addEntry(p.getName());
         }
-        Bukkit.getScheduler().runTaskLater(plugin, this::game, 3*20);
+        Bukkit.getScheduler().runTaskLater(plugin, this::game, 3 * 20);
     }
 
     private void checkPlayers() {
@@ -217,12 +216,12 @@ public class BlockParty implements Listener {
         api.eventBroadcast(api.getMessage("EventWin").replace("%player%", players.get(0).getName()));
         players.clear();
         allowJoining = true;
-        Bukkit.getScheduler().runTaskLater(plugin, api::returnPlayers, 3*20);
+        Bukkit.getScheduler().runTaskLater(plugin, api::returnPlayers, 3 * 20);
     }
 
     public void join(Player p) {
         System.out.println(p);
-        if(allowJoining) {
+        if (allowJoining) {
             if (!players.contains(p)) {
                 p.teleport(spawn);
                 p.setGameMode(GameMode.ADVENTURE);
@@ -246,13 +245,14 @@ public class BlockParty implements Listener {
     @EventHandler
     public void onMove(PlayerMoveEvent e) {
         Player p = e.getPlayer();
-        if(p.getWorld() != world) return;
-        if(p.getLocation().getY() <= 54) {
-            if(allowJoining){
+        if (p.getWorld() != world)
+            return;
+        if (p.getLocation().getY() <= 54) {
+            if (allowJoining) {
                 p.teleport(spawn);
                 return;
             }
-            if(players.contains(p)) {
+            if (players.contains(p)) {
                 playerDeath(p);
             } else {
                 p.teleport(spawn);
@@ -262,47 +262,59 @@ public class BlockParty implements Listener {
 
     @EventHandler
     public void onPvP(EntityDamageByEntityEvent e) {
-        if(!(e.getEntity() instanceof Player)) return;
-        if(!(e.getDamager() instanceof Player)) return;
-        if(e.getEntity().getWorld() != world) return;
+        if (!(e.getEntity() instanceof Player))
+            return;
+        if (!(e.getDamager() instanceof Player))
+            return;
+        if (e.getEntity().getWorld() != world)
+            return;
         System.out.println("Test");
-        if(players.contains(e.getEntity())) e.setCancelled(true);
+        if (players.contains(e.getEntity()))
+            e.setCancelled(true);
     }
 
     @EventHandler
-    public void onBlockPlace(BlockPlaceEvent e){
+    public void onBlockPlace(BlockPlaceEvent e) {
         Player p = e.getPlayer();
-        if(p.getWorld() != world) return;
-        if(!p.hasPermission("events.build")) e.setCancelled(true);
+        if (p.getWorld() != world)
+            return;
+        if (!p.hasPermission("events.build"))
+            e.setCancelled(true);
     }
 
     @EventHandler
-    public void onBlockBreak(BlockBreakEvent e){
+    public void onBlockBreak(BlockBreakEvent e) {
         Player p = e.getPlayer();
-        if(p.getWorld() != world) return;
-        if(!p.hasPermission("events.build")) e.setCancelled(true);
+        if (p.getWorld() != world)
+            return;
+        if (!p.hasPermission("events.build"))
+            e.setCancelled(true);
     }
 
     @EventHandler
-    public void onQuit(PlayerQuitEvent e){
+    public void onQuit(PlayerQuitEvent e) {
         Player p = e.getPlayer();
-        if(players.contains(p)){
+        if (players.contains(p)) {
             players.remove(p);
         }
     }
 
     @EventHandler
-    public void onHungerDeplete(FoodLevelChangeEvent e){
-        if(!(e.getEntity() instanceof Player)) return;
-        if(e.getEntity().getWorld() != world) return;
+    public void onHungerDeplete(FoodLevelChangeEvent e) {
+        if (!(e.getEntity() instanceof Player))
+            return;
+        if (e.getEntity().getWorld() != world)
+            return;
         e.setCancelled(true);
         e.setFoodLevel(20);
     }
 
     @EventHandler
     public void onDamage(EntityDamageEvent e) {
-        if(!(e.getEntity() instanceof Player)) return;
-        if(e.getEntity().getWorld() != world) return;
+        if (!(e.getEntity() instanceof Player))
+            return;
+        if (e.getEntity().getWorld() != world)
+            return;
         e.setCancelled(true);
         ((Player) e.getEntity()).setHealth(20);
     }

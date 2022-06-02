@@ -12,14 +12,14 @@ import java.util.List;
 
 public class api {
 
-    public static HoloMCEvents getPlugin(){
+    public static HoloMCEvents getPlugin() {
         return HoloMCEvents.getPluginMain();
     }
 
-    public static String color(String text){
+    public static String color(String text) {
         return ChatColor.translateAlternateColorCodes('&', text);
     }
-    
+
     @SuppressWarnings("deprecation")
     public static ItemStack createGuiItem(final Material material, final String name, final String... lore) {
         final ItemStack item = new ItemStack(material, 1);
@@ -36,14 +36,14 @@ public class api {
 
         return item;
     }
-    
+
     @SuppressWarnings("deprecation")
     public static void eventBroadcast(String msg) {
         Bukkit.broadcastMessage(api.color(getPrefix() + " " + msg));
     }
 
     public static void returnPlayers() {
-        for(Player p : Bukkit.getOnlinePlayers()){
+        for (Player p : Bukkit.getOnlinePlayers()) {
             p.getInventory().clear();
             PluginMessage.connect(p, "lobby");
         }
@@ -54,7 +54,7 @@ public class api {
         return api.color(plugin.messagesConfig.get().getString(path));
     }
 
-    public static void noPermission(Player p){
+    public static void noPermission(Player p) {
         p.sendMessage(api.getMessage("NoPermission"));
     }
 
@@ -62,7 +62,7 @@ public class api {
         return api.getMessage("EventPrefix");
     }
 
-    public static void sendEventMessage(Player p, String path){
+    public static void sendEventMessage(Player p, String path) {
         p.sendMessage(api.getPrefix() + " " + api.getMessage(path));
     }
 }

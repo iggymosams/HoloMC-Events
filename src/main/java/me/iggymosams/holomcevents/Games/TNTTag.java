@@ -1,7 +1,6 @@
 package me.iggymosams.holomcevents.Games;
 
 import me.iggymosams.holomcevents.HoloMCEvents;
-import me.iggymosams.holomcevents.PluginMessage;
 import me.iggymosams.holomcevents.api;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.*;
@@ -35,7 +34,7 @@ public class TNTTag implements Listener {
     World world = Bukkit.getWorld(worldName);
     WorldBorder worldBorder = world.getWorldBorder();
 
-    Location spawn = new Location(world, 0,64, 0);
+    Location spawn = new Location(world, 0, 64, 0);
     Team playerTeam;
     Team taggerTeam;
 
@@ -65,16 +64,17 @@ public class TNTTag implements Listener {
         join(host);
     }
 
+    @SuppressWarnings("deprecation")
     private void setupTeams() {
         Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
         System.out.println(scoreboard.getTeams());
-        if(scoreboard.getTeam("tntplayers") == null) {
+        if (scoreboard.getTeam("tntplayers") == null) {
             playerTeam = scoreboard.registerNewTeam("tntplayers");
             playerTeam.color(NamedTextColor.WHITE);
         } else {
             playerTeam = scoreboard.getTeam("tntplayers");
         }
-        if(scoreboard.getTeam("tnttaggers") == null) {
+        if (scoreboard.getTeam("tnttaggers") == null) {
             taggerTeam = scoreboard.registerNewTeam("tnttaggers");
             taggerTeam.color(NamedTextColor.RED);
             taggerTeam.setPrefix("[TNT] ");
@@ -84,7 +84,7 @@ public class TNTTag implements Listener {
     }
 
     public void join(Player p) {
-        if(allowJoining) {
+        if (allowJoining) {
             if (!players.contains(p)) {
                 p.teleport(spawn);
                 p.setGameMode(GameMode.ADVENTURE);
@@ -99,35 +99,34 @@ public class TNTTag implements Listener {
 
     public void start() {
         allowJoining = false;
-        for(Player p : players) {
+        for (Player p : players) {
             p.setHealth(20);
             p.setFoodLevel(20);
             playerTeam.addEntry(p.getName());
         }
 
         worldBorder.setSize(25);
-        Bukkit.getScheduler().runTaskLater(plugin, this::pickTaggers, 2*20);
+        Bukkit.getScheduler().runTaskLater(plugin, this::pickTaggers, 2 * 20);
     }
 
     private void pickTaggers() {
         taggers.clear();
         Random random = new Random();
         int taggersAmount = 1;
-        if(players.size() >= 11) {
+        if (players.size() >= 11) {
             taggersAmount = 3;
-        } else if(players.size() < 11 && players.size() >= 5) {
+        } else if (players.size() < 11 && players.size() >= 5) {
             taggersAmount = 2;
         }
         for (int i = 0; i < taggersAmount; i++) {
             int index = random.nextInt(players.size());
-            if(taggers.contains(players.get(index))) {
+            if (taggers.contains(players.get(index))) {
                 i--;
                 continue;
             }
             taggers.add(players.get(index));
             taggerTeam.addEntry(players.get(index).getName());
         }
-
 
         for (Player p : taggers) {
             setTaggerInv(p);
@@ -142,18 +141,19 @@ public class TNTTag implements Listener {
         p.getInventory().setHelmet(new ItemStack(Material.TNT));
     }
 
-    //Main Game Loop
+    // Main Game Loop
     public void doTNTTag() {
-        if(players.size() <= 6) {
-            for(Player p : players) {
+        if (players.size() <= 6) {
+            for (Player p : players) {
                 p.teleport(spawn);
             }
         }
         taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
             int time = 0;
+
             @Override
             public void run() {
-                if(time == tntTime) {
+                if (time == tntTime) {
                     time = 0;
                     explode();
                     Bukkit.getScheduler().cancelTask(taskID);
@@ -163,7 +163,7 @@ public class TNTTag implements Listener {
         }, 0L, 20L);
     }
 
-    //Explode all Taggers
+    // Explode all Taggers
     private void explode() {
         for (Player p : taggers) {
             players.remove(p);
@@ -173,13 +173,13 @@ public class TNTTag implements Listener {
         }
         taggers.clear();
         checkPlayers();
-        if(players.size() != 1) {
+        if (players.size() != 1) {
             Bukkit.getScheduler().runTaskLater(plugin, this::pickTaggers, 5 * 20);
         }
     }
 
     private void checkPlayers() {
-        if(players.size() == 1) {
+        if (players.size() == 1) {
             endGame();
         }
     }
@@ -190,7 +190,7 @@ public class TNTTag implements Listener {
         players.clear();
         taggers.clear();
         allowJoining = true;
-        Bukkit.getScheduler().runTaskLater(plugin, api::returnPlayers, 3*20);
+        Bukkit.getScheduler().runTaskLater(plugin, api::returnPlayers, 3 * 20);
     }
 
     private void playerTagged(Player player, Player tagger) {
@@ -205,50 +205,59 @@ public class TNTTag implements Listener {
         playerTeam.removeEntry(player.getName());
         playerTeam.addEntry(tagger.getName());
 
-        api.eventBroadcast("%tagger% has tagged %player%".replace("%tagger%", tagger.getName()).replace("%player%", player.getName()));
+        api.eventBroadcast("%tagger% has tagged %player%".replace("%tagger%", tagger.getName()).replace("%player%",
+                player.getName()));
     }
 
     @EventHandler
     public void onPvP(EntityDamageByEntityEvent e) {
-        if(!(e.getEntity() instanceof Player)) return;
-        if(!(e.getDamager() instanceof Player)) return;
+        if (!(e.getEntity() instanceof Player))
+            return;
+        if (!(e.getDamager() instanceof Player))
+            return;
         Player p = (Player) e.getEntity();
-        if(p.getWorld() != world) return;
-        if(allowJoining) e.setCancelled(true);
+        if (p.getWorld() != world)
+            return;
+        if (allowJoining)
+            e.setCancelled(true);
         System.out.println("TNT");
-        if(players.contains(p)) {
-//            p.setHealth(20);
-            if(taggers.contains(p)) {
+        if (players.contains(p)) {
+            // p.setHealth(20);
+            if (taggers.contains(p)) {
                 return;
             }
-            if(taggers.contains(e.getDamager())) {
-                   playerTagged(p, (Player) e.getDamager());
+            if (taggers.contains(e.getDamager())) {
+                playerTagged(p, (Player) e.getDamager());
             }
         }
     }
 
     @EventHandler
-    public void onBlockPlace(BlockPlaceEvent e){
+    public void onBlockPlace(BlockPlaceEvent e) {
         Player p = e.getPlayer();
-        if(p.getWorld() != world) return;
-        if(!p.hasPermission("events.build")) e.setCancelled(true);
+        if (p.getWorld() != world)
+            return;
+        if (!p.hasPermission("events.build"))
+            e.setCancelled(true);
     }
 
     @EventHandler
-    public void onBlockBreak(BlockBreakEvent e){
+    public void onBlockBreak(BlockBreakEvent e) {
         Player p = e.getPlayer();
-        if(p.getWorld() != world) return;
-        if(!p.hasPermission("events.build")) e.setCancelled(true);
+        if (p.getWorld() != world)
+            return;
+        if (!p.hasPermission("events.build"))
+            e.setCancelled(true);
     }
 
     @EventHandler
-    public void onQuit(PlayerQuitEvent e){
+    public void onQuit(PlayerQuitEvent e) {
         Player p = e.getPlayer();
-        if(players.contains(p)){
+        if (players.contains(p)) {
             players.remove(p);
         }
-        if(taggers.contains(p)){
-            if(taggers.size() == 1) {
+        if (taggers.contains(p)) {
+            if (taggers.size() == 1) {
                 Bukkit.getScheduler().cancelTask(taskID);
                 explode();
             }
@@ -256,18 +265,22 @@ public class TNTTag implements Listener {
     }
 
     @EventHandler
-    public void onHungerDeplete(FoodLevelChangeEvent e){
-        if(!(e.getEntity() instanceof Player)) return;
-        if(e.getEntity().getWorld() != world) return;
+    public void onHungerDeplete(FoodLevelChangeEvent e) {
+        if (!(e.getEntity() instanceof Player))
+            return;
+        if (e.getEntity().getWorld() != world)
+            return;
         e.setCancelled(true);
         e.setFoodLevel(20);
     }
 
     @EventHandler
     public void onDamage(EntityDamageEvent e) {
-        if(!(e.getEntity() instanceof Player)) return;
-        if(e.getEntity().getWorld() != world) return;
-//        e.setCancelled(true);
+        if (!(e.getEntity() instanceof Player))
+            return;
+        if (e.getEntity().getWorld() != world)
+            return;
+        // e.setCancelled(true);
         ((Player) e.getEntity()).setHealth(20);
     }
 }

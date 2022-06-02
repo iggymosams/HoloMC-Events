@@ -2,6 +2,7 @@ package me.iggymosams.holomcevents;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -44,6 +45,7 @@ public class api {
 
     public static void returnPlayers() {
         for (Player p : Bukkit.getOnlinePlayers()) {
+            p.teleport(new Location(Bukkit.getWorld("spawn"), 0,63,0));
             p.getInventory().clear();
             PluginMessage.connect(p, "lobby");
         }

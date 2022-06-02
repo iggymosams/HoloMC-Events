@@ -5,6 +5,7 @@ import me.iggymosams.holomcevents.Games.FloorIsLava;
 import me.iggymosams.holomcevents.Games.TNTTag;
 import me.iggymosams.holomcevents.Games.UHC;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -13,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 
@@ -112,5 +114,10 @@ public class EventManager implements Listener, CommandExecutor {
         }
         PluginMessage.sendEventBroadcast(p, "_event_broadcast", api.getPrefix() + " "
                 + api.getMessage("EventHost").replace("%host%", host.getName()).replace("%eventtype%", EventType));
+    }
+
+    @EventHandler
+    public void onJoin(PlayerJoinEvent e) {
+        e.getPlayer().teleport(new Location(Bukkit.getWorld("spawn"), 0,63,0));
     }
 }

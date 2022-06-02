@@ -12,6 +12,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.Scoreboard;
@@ -282,5 +283,15 @@ public class TNTTag implements Listener {
             return;
         // e.setCancelled(true);
         ((Player) e.getEntity()).setHealth(20);
+    }
+
+    @EventHandler
+    public void onDrop(PlayerDropItemEvent e) {
+        Player p = e.getPlayer();
+        if (p.getWorld() != world)
+            return;
+        if (players.contains(p)) {
+            e.setCancelled(true);
+        }
     }
 }

@@ -19,11 +19,11 @@ public class api {
     public static String color(String text){
         return ChatColor.translateAlternateColorCodes('&', text);
     }
-
+    
+    @SuppressWarnings("deprecation")
     public static ItemStack createGuiItem(final Material material, final String name, final String... lore) {
         final ItemStack item = new ItemStack(material, 1);
         final ItemMeta meta = item.getItemMeta();
-
         meta.setDisplayName(color(name));
         List<String> itemlore = Arrays.asList(lore);
         for (int counter = 0; counter < itemlore.size(); counter++) {
@@ -36,7 +36,8 @@ public class api {
 
         return item;
     }
-
+    
+    @SuppressWarnings("deprecation")
     public static void eventBroadcast(String msg) {
         Bukkit.broadcastMessage(api.color(getPrefix() + " " + msg));
     }

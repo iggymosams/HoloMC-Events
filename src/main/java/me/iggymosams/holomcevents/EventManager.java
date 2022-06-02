@@ -1,4 +1,5 @@
 package me.iggymosams.holomcevents;
+
 import me.iggymosams.holomcevents.Games.BlockParty;
 import me.iggymosams.holomcevents.Games.FloorIsLava;
 import me.iggymosams.holomcevents.Games.TNTTag;
@@ -27,10 +28,11 @@ public class EventManager implements Listener, CommandExecutor {
     public FloorIsLava floorIsLava;
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if(sender instanceof Player) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label,
+            @NotNull String[] args) {
+        if (sender instanceof Player) {
             Player p = (Player) sender;
-            if(host == p) {
+            if (host == p) {
                 switch (EventType) {
                     case "Block Party":
                         blockParty.start();
@@ -46,14 +48,15 @@ public class EventManager implements Listener, CommandExecutor {
                         return true;
                 }
                 api.sendEventMessage(p, "EventStart");
-            } else{
+            } else {
                 api.noPermission(p);
             }
         }
         return false;
     }
 
-    public void EventSetup(Player host){
+    @SuppressWarnings("deprecation")
+    public void EventSetup(Player host) {
         etgui = Bukkit.createInventory(null, 9, api.color("Event Type"));
         etgui.setItem(1, api.createGuiItem(Material.PINK_CONCRETE, "&aBlock Party Event", "&cComing Soon"));
         etgui.setItem(2, api.createGuiItem(Material.TNT, "&aTNT Tag Event", "&cComing Soon"));
@@ -79,11 +82,12 @@ public class EventManager implements Listener, CommandExecutor {
         }
     }
 
-
+    @SuppressWarnings("deprecation")
     @EventHandler
-    public void onInventoryClick(InventoryClickEvent e){
+    public void onInventoryClick(InventoryClickEvent e) {
         Player p = (Player) e.getWhoClicked();
-        if(!e.getView().getTitle().equals("Event Type")) return;
+        if (!e.getView().getTitle().equals("Event Type"))
+            return;
         e.setCancelled(true);
         host = p;
         switch (e.getSlot()) {
@@ -106,6 +110,7 @@ public class EventManager implements Listener, CommandExecutor {
                 floorIsLava.setUp(host);
                 break;
         }
-        PluginMessage.sendEventBroadcast(p, "_event_broadcast", api.getPrefix() + " " + api.getMessage("EventHost").replace("%host%", host.getName()).replace("%eventtype%", EventType));
+        PluginMessage.sendEventBroadcast(p, "_event_broadcast", api.getPrefix() + " "
+                + api.getMessage("EventHost").replace("%host%", host.getName()).replace("%eventtype%", EventType));
     }
 }

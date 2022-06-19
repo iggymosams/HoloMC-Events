@@ -1,5 +1,17 @@
 package me.iggymosams.holomcevents.Games;
 
+import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.WorldEdit;
+import com.sk89q.worldedit.WorldEditException;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.extent.clipboard.Clipboard;
+import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
+import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormats;
+import com.sk89q.worldedit.extent.clipboard.io.ClipboardReader;
+import com.sk89q.worldedit.function.operation.Operation;
+import com.sk89q.worldedit.function.operation.Operations;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.session.ClipboardHolder;
 import me.iggymosams.holomcevents.HoloMCEvents;
 import me.iggymosams.holomcevents.api;
 import org.bukkit.*;
@@ -18,6 +30,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -70,7 +87,11 @@ public class BlockParty implements Listener {
         minusCorner.setY(63);
         setupTeam();
         setupColors();
-        generatePlatform(plusCorner, minusCorner);
+        try {
+            generatePlatform(plusCorner, minusCorner);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         allowJoining = true;
         join(host);
     }
@@ -123,7 +144,11 @@ public class BlockParty implements Listener {
                 }
                 if (!floorState) {
                     if (emptyTime == 3) {
-                        chosen = generatePattern(plusCorner, minusCorner);
+                        try {
+                            chosen = generatePattern(plusCorner, minusCorner);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
                         floorState = true;
                         emptyTime = 0;
                     }
@@ -135,19 +160,37 @@ public class BlockParty implements Listener {
     }
 
     // Generates white starting platform
-    private void generatePlatform(Location plusCorner, Location minusCorner) {
-        for (int x = minusCorner.getBlockX(); x <= plusCorner.getBlockX(); x++) {
-            for (int y = minusCorner.getBlockY(); y <= plusCorner.getBlockY(); y++) {
-                for (int z = minusCorner.getBlockZ(); z <= plusCorner.getBlockZ(); z++) {
-                    Block block = new Location(world, x, y, z).getBlock();
-                    block.setType(Material.WHITE_CONCRETE);
-                }
-            }
+    private void generatePlatform(Location plusCorner, Location minusCorner) throws IOException {
+        File logoFile = new File(plugin.getDataFolder() + "/floors/logo.schem");
+        ClipboardFormat format = ClipboardFormats.findByFile(logoFile);
+        ClipboardReader reader = format.getReader(Files.newInputStream(logoFile.toPath()));
+        Clipboard clipboard = reader.read();
+
+        com.sk89q.worldedit.world.World weWorld = BukkitAdapter.adapt(world);
+
+        try (EditSession editSession = WorldEdit.getInstance().newEditSession(weWorld)) {
+            Operation operation = new ClipboardHolder(clipboard)
+                    .createPaste(editSession)
+                    .to(BlockVector3.at(12.5, 64, 12.5))
+                    // configure here
+                    .build();
+            Operations.complete(operation);
+        } catch (WorldEditException e) {
+            throw new RuntimeException(e);
         }
+//        for (int x = minusCorner.getBlockX(); x <= plusCorner.getBlockX(); x++) {
+//            for (int y = minusCorner.getBlockY(); y <= plusCorner.getBlockY(); y++) {
+//                for (int z = minusCorner.getBlockZ(); z <= plusCorner.getBlockZ(); z++) {
+//                    Block block = new Location(world, x, y, z).getBlock();
+//                    block.setType(Material.WHITE_CONCRETE);
+//                }
+//            }
+//        }
     }
 
     // Generates Random Pattern
-    public Material generatePattern(Location plusCorner, Location minusCorner) {
+    // TODO: Load Platform from schematic and select color based on it
+    public Material generatePattern(Location plusCorner, Location minusCorner) throws IOException {
         if (floorCount % modifier == 0) {
             if (level <= 2) {
                 level++;
@@ -156,22 +199,52 @@ public class BlockParty implements Listener {
                 }
             }
         }
-        floorCount++;
+
         Material chosen = Material.WHITE_CONCRETE;
+        File floor = null;
+
+        if(floorCount == 1) {
+            floor = new File(plugin.getDataFolder() + "/floors/logo.schem");
+        }else{
+            File dir = new File(plugin.getDataFolder() + "/floors/");
+            File[] files = dir.listFiles();
+            Random rand = new Random();
+            floor = files[rand.nextInt(files.length)];
+        }
+        floorCount++;
+
+        ClipboardFormat format = ClipboardFormats.findByFile(floor);
+        ClipboardReader reader = format.getReader(Files.newInputStream(floor.toPath()));
+        Clipboard clipboard = reader.read();
+
+        com.sk89q.worldedit.world.World weWorld = BukkitAdapter.adapt(world);
+
+        try (EditSession editSession = WorldEdit.getInstance().newEditSession(weWorld)) {
+            Operation operation = new ClipboardHolder(clipboard)
+                    .createPaste(editSession)
+                    .to(BlockVector3.at(12.5, 64, 12.5))
+                    // configure here
+                    .build();
+            Operations.complete(operation);
+        } catch (WorldEditException e) {
+            throw new RuntimeException(e);
+        }
+        colors.clear();
         for (int x = minusCorner.getBlockX(); x <= plusCorner.getBlockX(); x++) {
             for (int y = minusCorner.getBlockY(); y <= plusCorner.getBlockY(); y++) {
                 for (int z = minusCorner.getBlockZ(); z <= plusCorner.getBlockZ(); z++) {
                     Block block = new Location(world, x, y, z).getBlock();
-                    Random random = new Random();
-                    int color = random.nextInt(colors.size());
-                    block.setType(colors.get(color));
-                    chosen = colors.get(color);
-
-                    for (Player p : players) {
-                        p.getInventory().setItem(4, new ItemStack(colors.get(color)));
+                    if(!colors.contains(block.getType())) {
+                        colors.add(block.getType());
                     }
                 }
             }
+        }
+        Random random = new Random();
+        int color = random.nextInt(colors.size());
+        chosen = colors.get(color);
+        for (Player p : players) {
+            p.getInventory().setItem(4, new ItemStack(colors.get(color)));
         }
         checkPlayers();
         return chosen;
@@ -212,9 +285,14 @@ public class BlockParty implements Listener {
 
     private void endGame() {
         Bukkit.getScheduler().cancelTask(taskID);
-        generatePlatform(plusCorner, minusCorner);
+        try {
+            generatePlatform(plusCorner, minusCorner);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         api.eventBroadcast(api.getMessage("EventWin").replace("%player%", players.get(0).getName()));
         players.clear();
+        floorCount = 1;
         allowJoining = true;
         Bukkit.getScheduler().runTaskLater(plugin, api::returnPlayers, 3 * 20);
     }

@@ -23,9 +23,9 @@ public class PluginMessage implements PluginMessageListener {
         if (subChannel.equalsIgnoreCase("hosting")) {
             String host = in.readUTF();
             int msgid = in.readInt();
-            // eventManager.host = Bukkit.getPlayer(host);
+            eventManager.host = Bukkit.getPlayer(host);
             System.out.println("T");
-            // eventManager.EventSetup(Bukkit.getPlayer(host));
+            eventManager.EventSetup(Bukkit.getPlayer(host));
         } else if (subChannel.equalsIgnoreCase("iseventrunning")) {
             String request = in.readUTF();
             int msgid = in.readInt();

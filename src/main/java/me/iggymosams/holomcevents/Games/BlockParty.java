@@ -16,6 +16,9 @@ import me.iggymosams.holomcevents.HoloMCEvents;
 import me.iggymosams.holomcevents.api;
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -31,8 +34,6 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -70,6 +71,8 @@ public class BlockParty implements Listener {
 
     public boolean allowJoining = false;
 
+    BossBar bossBar = Bukkit.createBossBar("Block Party", BarColor.RED, BarStyle.SOLID);
+
     public void setUp(Player host) {
 
         plugin = api.getPlugin();
@@ -85,8 +88,13 @@ public class BlockParty implements Listener {
 
         plusCorner.setY(63);
         minusCorner.setY(63);
+
+        bossBar.setTitle("Block Party");
+        bossBar.setProgress(1);
+
         setupTeam();
         setupColors();
+
         try {
             generatePlatform(plusCorner, minusCorner);
         } catch (IOException e) {
@@ -134,6 +142,7 @@ public class BlockParty implements Listener {
             public void run() {
                 checkPlayers();
                 if (floorState) {
+                    bossBar.setProgress(floorTime/(time-level));
                     if (floorTime == (time - level)) {
                         floorState = false;
                         floorTime = 0;
@@ -188,8 +197,7 @@ public class BlockParty implements Listener {
 //        }
     }
 
-    // Generates Random Pattern
-    // TODO: Load Platform from schematic and select color based on it
+    // Generates Randomly selected pattern from the schematics
     public Material generatePattern(Location plusCorner, Location minusCorner) throws IOException {
         if (floorCount % modifier == 0) {
             if (level <= 2) {
@@ -273,6 +281,7 @@ public class BlockParty implements Listener {
             p.setHealth(20);
             p.setFoodLevel(20);
             team.addEntry(p.getName());
+            bossBar.addPlayer(p);
         }
         Bukkit.getScheduler().runTaskLater(plugin, this::game, 3 * 20);
     }
@@ -290,6 +299,7 @@ public class BlockParty implements Listener {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        bossBar.setTitle("Winner: %player%".replace("%player%", players.get(0).getName()));
         api.eventBroadcast(api.getMessage("EventWin").replace("%player%", players.get(0).getName()));
         players.clear();
         floorCount = 1;

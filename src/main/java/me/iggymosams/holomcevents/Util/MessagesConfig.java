@@ -51,5 +51,6 @@ public class MessagesConfig {
         messageConfig.addDefault("EventHost","&6&l%host% &6is hosting a &6&l%eventtype% &6event. Do &a&l/event &6to join");
         messageConfig.addDefault("EventStart","You have started the event");
         messageConfig.addDefault("EventWin","&6&l%player% has won the event!");
+        messageConfig.addDefault("BlockPartyFloorTimer","The Timer has been Shortened");
     }
 }

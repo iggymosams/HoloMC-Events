@@ -202,6 +202,7 @@ public class BlockParty implements Listener {
         if (floorCount % modifier == 0) {
             if (level <= 2) {
                 level++;
+                api.eventBroadcast(api.getMessage("BlockPartyFloorTimer"));
                 for (Player p : players) {
                     p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 1);
                 }

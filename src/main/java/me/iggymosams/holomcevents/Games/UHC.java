@@ -49,7 +49,7 @@ public class UHC implements Listener {
 
         this.host = host;
 
-        host.sendMessage(api.color("The world is generating. Please Wait. The server might lag"));
+        api.sendEventMessage(host, "WorldGenerating");
 
         worldManager.addWorld(
                 worldName,
@@ -85,7 +85,7 @@ public class UHC implements Listener {
                 p.setFoodLevel(20);
                 players.add(p);
             } else {
-                p.sendMessage("You are already in this event");
+                api.sendEventMessage(p, "AlreadyInEvent");
             }
         }
     }

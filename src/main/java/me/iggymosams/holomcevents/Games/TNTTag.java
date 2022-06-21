@@ -93,7 +93,7 @@ public class TNTTag implements Listener {
                 p.setFoodLevel(20);
                 players.add(p);
             } else {
-                p.sendMessage("You are already in this event");
+                api.sendEventMessage(p, "AlreadyInEvent");
             }
         }
     }
